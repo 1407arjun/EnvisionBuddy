@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -32,14 +31,12 @@ public class ModelsRecyclerViewAdapter extends RecyclerView.Adapter<ModelsRecycl
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate Layout
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_layout_models, parent, false);
         return new RecyclerViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
-        // Set the data to textview and imageview.
         holder.nameTextView.setText(arrayList.get(position).get("name"));
         Picasso.with(context).load(arrayList.get(position).get("thumbnail"))
                 .placeholder(R.drawable.ic_placeholder)
@@ -58,11 +55,9 @@ public class ModelsRecyclerViewAdapter extends RecyclerView.Adapter<ModelsRecycl
 
     @Override
     public int getItemCount() {
-        // this method returns the size of recyclerview
-        return arrayList.size();
+       return arrayList.size();
     }
 
-    // View Holder Class to handle Recycler View.
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
         private TextView nameTextView;

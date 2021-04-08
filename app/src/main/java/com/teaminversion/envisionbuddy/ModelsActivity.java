@@ -17,14 +17,8 @@ public class ModelsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_models);
         RecyclerView modelsRecyclerView = findViewById(R.id.modelsRecyclerView);
 
-        // added data from arraylist to adapter class.
         ModelsRecyclerViewAdapter modelsAdapter = new ModelsRecyclerViewAdapter(ChoiceActivity.models,this);
-
-        // setting grid layout manager to implement grid view.
-        // in this method '2' represents number of columns to be displayed in grid view.
         GridLayoutManager layoutManager = new GridLayoutManager(this,2);
-
-        // at last set adapter to recycler view.
         modelsRecyclerView.setLayoutManager(layoutManager);
         modelsRecyclerView.setAdapter(modelsAdapter);
 

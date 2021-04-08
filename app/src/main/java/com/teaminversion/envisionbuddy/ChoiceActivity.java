@@ -27,14 +27,8 @@ public class ChoiceActivity extends AppCompatActivity {
         choiceList.clear();
         analyzeText(text);
 
-        // added data from arraylist to adapter class.
         ChoiceRecyclerViewAdapter choiceAdapter = new ChoiceRecyclerViewAdapter(choiceList,this);
-
-        // setting grid layout manager to implement grid view.
-        // in this method '2' represents number of columns to be displayed in grid view.
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-
-        // at last set adapter to recycler view.
         choiceRecyclerView.setLayoutManager(layoutManager);
         choiceRecyclerView.setAdapter(choiceAdapter);
 
@@ -50,7 +44,7 @@ public class ChoiceActivity extends AppCompatActivity {
     }
 
     private void analyzeText(String inputText){
-        //Code here
+        //Sample choices
         choiceList.add("magnet");
         choiceList.add("brain");
         choiceList.add("plant");
