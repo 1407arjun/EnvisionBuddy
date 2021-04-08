@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -155,8 +156,12 @@ public class MainActivity extends AppCompatActivity {
         }
         TextView textView = findViewById(R.id.textView);
         textView.setText(resultText);
-        Intent intent = new Intent(MainActivity.this, ChoiceActivity.class);
-        intent.putExtra("text", resultText);
-        startActivity(intent);
+        Button continueButton = findViewById(R.id.continueButton);
+        continueButton.setEnabled(true);
+        continueButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ChoiceActivity.class);
+            intent.putExtra("text", resultText);
+            startActivity(intent);
+        });
     }
 }
