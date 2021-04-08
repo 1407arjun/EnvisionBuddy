@@ -150,5 +150,8 @@ public class MainActivity extends AppCompatActivity {
         }
         TextView textView = findViewById(R.id.textView);
         textView.setText(resultText);
+        Intent intent = new Intent(MainActivity.this, ChoiceActivity.class);
+        intent.putExtra("text", resultText);
+        startActivity(intent);
     }
 }

@@ -17,8 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-
-
+        app:navigationIcon="@drawable/ic_back"
         app:subtitle="Would you like to visualize any of these?"
         app:title="Choose the topic" />
 

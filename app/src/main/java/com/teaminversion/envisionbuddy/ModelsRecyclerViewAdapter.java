@@ -41,6 +41,19 @@ public class ModelsRecyclerViewAdapter extends RecyclerView.Adapter<ModelsRecycl
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         // Set the data to textview and imageview.
         holder.nameTextView.setText(arrayList.get(position).get("name"));
+        Picasso.with(context).load(arrayList.get(position).get("thumbnail"))
+                .placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_error_placeholder)
+                .into(holder.modelImageView);
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
+                sceneViewerIntent.setData(Uri.parse("https://arvr.google.com/scene-viewer/1.0?file=" + ChoiceActivity.models.get(position).get("url")));
+                sceneViewerIntent.setPackage("com.google.android.googlequicksearchbox");
+                context.startActivity(sceneViewerIntent);
+            }
+        });
     }
 
     @Override
