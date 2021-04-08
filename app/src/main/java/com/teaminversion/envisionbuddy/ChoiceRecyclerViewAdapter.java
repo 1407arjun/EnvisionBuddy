@@ -1,5 +1,6 @@
 package com.teaminversion.envisionbuddy;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -46,6 +47,12 @@ public class ChoiceRecyclerViewAdapter extends RecyclerView.Adapter<ChoiceRecycl
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ProgressDialog progress = new ProgressDialog(context);
+                progress.setMessage("Retrieving data");
+                progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progress.setIndeterminate(true);
+                progress.setCancelable(false);
+                progress.show();
                 ChoiceActivity.models.clear();
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(API.BASE_URL)
@@ -67,6 +74,7 @@ public class ChoiceRecyclerViewAdapter extends RecyclerView.Adapter<ChoiceRecycl
                             }
                         }
 
+                        progress.dismiss();
                         if (!ChoiceActivity.models.isEmpty()) {
                             context.startActivity(new Intent(context, ModelsActivity.class));
                         }else{
@@ -77,6 +85,7 @@ public class ChoiceRecyclerViewAdapter extends RecyclerView.Adapter<ChoiceRecycl
 
                     @Override
                     public void onFailure(Call<ArrayList<JSONProcessActivity>> call, Throwable t) {
+                        progress.dismiss();
                         Snackbar snackbar = Snackbar.make(v, "Couldn't fetch data", Snackbar.LENGTH_LONG);
                         snackbar.show();
                     }
