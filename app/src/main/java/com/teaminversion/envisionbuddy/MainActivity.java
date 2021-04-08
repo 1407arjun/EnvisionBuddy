@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_TAKE_PHOTO = 1000;
     String mCurrentPhotoPath;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    private static final int MY_STORAGE_PERMISSION_CODE = 101;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 dispatchTakePictureIntent();
             }
+
         });
     }
 
@@ -65,39 +67,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
 
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_STORAGE_PERMISSION_CODE);
+        }else{
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                if (photoFile != null) {
+                    Uri photoURI = FileProvider.getUriForFile(this, "com.teaminversion.envisionbuddy.fileprovider", photoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                }
             }
 
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this, "com.teaminversion.envisionbuddy.fileprovider", photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == MY_CAMERA_PERMISSION_CODE)
-        {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
-                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+        if (requestCode == MY_CAMERA_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Camera permission granted", Toast.LENGTH_LONG).show();
                 dispatchTakePictureIntent();
+            }else {
+                Toast.makeText(this, "Camera permission denied", Toast.LENGTH_LONG).show();
             }
-            else
-            {
-                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+        }else if (requestCode == MY_STORAGE_PERMISSION_CODE){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(this, "Storage permission granted", Toast.LENGTH_LONG).show();
+                dispatchTakePictureIntent();
+            }else{
+                Toast.makeText(this, "Storage permission denied", Toast.LENGTH_LONG).show();
             }
         }
     }
