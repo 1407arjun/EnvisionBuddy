@@ -2,10 +2,20 @@ package com.teaminversion.envisionbuddy;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.Transition;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,21 +25,32 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,24 +58,24 @@ public class MainActivity extends AppCompatActivity {
     String mCurrentPhotoPath;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
     private static final int MY_STORAGE_PERMISSION_CODE = 101;
+    static ArrayList<String> recentList = new ArrayList<>();
+    static boolean activityStatus = true;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button scanButton = findViewById(R.id.scanButton);
+
+        FloatingActionButton scanButton = findViewById(R.id.scanButton);
         scanButton.setOnClickListener(v -> {
-            if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-            {
+            if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
-            }
-            else
-            {
+            } else {
                 dispatchTakePictureIntent();
             }
 
         });
+
     }
 
     private File createImageFile() throws IOException {
@@ -68,10 +89,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void dispatchTakePictureIntent() {
-        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_STORAGE_PERMISSION_CODE);
-        }else{
+        } else {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -83,10 +104,13 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (photoFile != null) {
-                    Uri photoURI = FileProvider.getUriForFile(this, "com.teaminversion.envisionbuddy.fileprovider", photoFile);
+                    /*Uri photoURI = FileProvider.getUriForFile(this, "com.teaminversion.envisionbuddy.fileprovider", photoFile);
                     takePictureIntent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);*/
+                    CropImage.activity()
+                            .setGuidelines(CropImageView.Guidelines.ON)
+                            .start(this);
                 }
             }
 
@@ -100,26 +124,29 @@ public class MainActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Camera permission granted", Toast.LENGTH_LONG).show();
                 dispatchTakePictureIntent();
-            }else {
+            } else {
                 Toast.makeText(this, "Camera permission denied", Toast.LENGTH_LONG).show();
             }
-        }else if (requestCode == MY_STORAGE_PERMISSION_CODE){
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        } else if (requestCode == MY_STORAGE_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Storage permission granted", Toast.LENGTH_LONG).show();
                 dispatchTakePictureIntent();
-            }else{
+            } else {
                 Toast.makeText(this, "Storage permission denied", Toast.LENGTH_LONG).show();
             }
         }
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         try {
-            if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-                File file = new File(mCurrentPhotoPath);
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.fromFile(file));
+            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+                //File file = new File(mCurrentPhotoPath);
+                CropImage.ActivityResult cropResult = CropImage.getActivityResult(intent);
+                Uri resultUri = cropResult.getUri();
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
                 if (bitmap != null) {
                     InputImage image = InputImage.fromBitmap(bitmap, 0);
                     TextRecognizer recognizer = TextRecognition.getClient();
@@ -163,5 +190,6 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("text", resultText);
             startActivity(intent);
         });
+
     }
 }

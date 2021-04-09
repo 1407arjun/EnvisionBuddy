@@ -15,7 +15,9 @@
         android:theme="@style/Theme.EnvisionBuddy">
         <activity android:name=".ModelsActivity"></activity>
         <activity android:name=".ChoiceActivity" />
-
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.teaminversion.envisionbuddy.fileprovider"

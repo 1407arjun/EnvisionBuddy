@@ -44,4 +44,5 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
     implementation 'com.airbnb.android:lottie:3.4.0'
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 }
