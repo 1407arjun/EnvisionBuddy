@@ -13,6 +13,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,17 +37,18 @@ public class ChoiceRecyclerViewAdapter extends RecyclerView.Adapter<ChoiceRecycl
 
     @NonNull
     @Override
-    public ChoiceRecyclerViewAdapter.RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_layout_choice, parent, false);
-        return new ChoiceRecyclerViewAdapter.RecyclerViewHolder(view);
+        return new RecyclerViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChoiceRecyclerViewAdapter.RecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         holder.choiceTextView.setText(arrayList.get(position));
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String word = arrayList.get(position);
                 ProgressDialog progress = new ProgressDialog(context);
                 progress.setMessage("Retrieving data");
                 progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -59,7 +61,7 @@ public class ChoiceRecyclerViewAdapter extends RecyclerView.Adapter<ChoiceRecycl
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 API myApi = retrofit.create(API.class);
-                Call<ArrayList<JSONProcessActivity>> call = myApi.getResult("old-smoke-4544", arrayList.get(position));
+                Call<ArrayList<JSONProcessActivity>> call = myApi.getResult("old-smoke-4544", word);
                 call.enqueue(new Callback<ArrayList<JSONProcessActivity>>() {
                     @Override
                     public void onResponse(Call<ArrayList<JSONProcessActivity>> call, Response<ArrayList<JSONProcessActivity>> response) {
@@ -78,7 +80,7 @@ public class ChoiceRecyclerViewAdapter extends RecyclerView.Adapter<ChoiceRecycl
                         if (!ChoiceActivity.models.isEmpty()) {
                             context.startActivity(new Intent(context, ModelsActivity.class));
                         }else{
-                            Snackbar snackbar = Snackbar.make(v, "Couldn't fetch data", Snackbar.LENGTH_LONG);
+                            Snackbar snackbar = Snackbar.make(v, "No 3D models found", Snackbar.LENGTH_LONG);
                             snackbar.show();
                         }
                     }

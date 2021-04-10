@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/search"
+        android:title="Search for 3D models"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="collapseActionView|ifRoom" />
+
+    <item android:id="@+id/add"
+        android:title="Scan"
+        android:icon="@drawable/ic_add"
+        app:showAsAction="collapseActionView|ifRoom" />
+</menu>

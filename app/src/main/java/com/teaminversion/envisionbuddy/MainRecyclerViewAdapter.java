@@ -20,12 +20,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class ModelsRecyclerViewAdapter extends RecyclerView.Adapter<ModelsRecyclerViewAdapter.RecyclerViewHolder> {
+public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerViewAdapter.RecyclerViewHolder> {
 
     private ArrayList<Map<String, String>> arrayList;
     private final Context context;
 
-    public ModelsRecyclerViewAdapter(ArrayList<Map<String, String>> arrayList, Context context) {
+    public MainRecyclerViewAdapter(ArrayList<Map<String, String>> arrayList, Context context) {
         this.arrayList = arrayList;
         this.context = context;
     }
@@ -33,37 +33,33 @@ public class ModelsRecyclerViewAdapter extends RecyclerView.Adapter<ModelsRecycl
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_layout_models, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_layout_main, parent, false);
         return new RecyclerViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
-        holder.nameTextView.setText(arrayList.get(position).get("name"));
+        holder.recentTextView.setText(arrayList.get(position).get("name"));
         Picasso.with(context).load(arrayList.get(position).get("thumbnail"))
                 .placeholder(R.drawable.ic_placeholder)
                 .error(R.drawable.ic_error_placeholder)
-                .into(holder.modelImageView);
+                .into(holder.mainImageView);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Map<String, String> word = arrayList.get(position);
-                if (HomeFragment.recentList.size() > 10){
-                    HomeFragment.recentList.remove(0);
-                }
-                if (HomeFragment.recentList.contains(word)){
-                    HomeFragment.recentList.remove(word);
-                }
-                HomeFragment.recentList.add(word);
-                HomeFragment.mainAdapter.notifyDataSetChanged();
+                context.startActivity(new Intent(context, ModelsActivity.class));
+                arrayList.remove(position);
+                arrayList.add(word);
                 SharedPreferences sharedPreferences = context.getSharedPreferences("com.teaminversion.envisionbuddy", Context.MODE_PRIVATE);
                 try {
-                    sharedPreferences.edit().putString("recentList", ObjectSerializer.serialize(HomeFragment.recentList)).apply();
+                    sharedPreferences.edit().putString("recentList", ObjectSerializer.serialize(arrayList)).apply();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                notifyDataSetChanged();
                 Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
-                sceneViewerIntent.setData(Uri.parse("https://arvr.google.com/scene-viewer/1.0?file=" + ChoiceActivity.models.get(position).get("url")));
+                sceneViewerIntent.setData(Uri.parse("https://arvr.google.com/scene-viewer/1.0?file=" + word.get("url")));
                 sceneViewerIntent.setPackage("com.google.android.googlequicksearchbox");
                 context.startActivity(sceneViewerIntent);
             }
@@ -72,19 +68,19 @@ public class ModelsRecyclerViewAdapter extends RecyclerView.Adapter<ModelsRecycl
 
     @Override
     public int getItemCount() {
-       return arrayList.size();
+        return arrayList.size();
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView nameTextView;
-        private ImageView modelImageView;
+        private TextView recentTextView;
+        private ImageView mainImageView;
         private CardView cardView;
 
         public RecyclerViewHolder(@NonNull View view) {
             super(view);
-            nameTextView = view.findViewById(R.id.nameTextView);
-            modelImageView = view.findViewById(R.id.modelImageView);
+            recentTextView = view.findViewById(R.id.recentTextView);
+            mainImageView = view.findViewById(R.id.mainImageView);
             cardView = view.findViewById(R.id.cardView);
         }
     }
