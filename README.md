@@ -31,3 +31,6 @@ The app, for now, runs on a cloud-based system i.e one has to be connected to th
 
 ## <img src="https://freeiconshop.com/wp-content/uploads/edd/code-flat.png" width="32" height="32"> APKs
 The APK of the project can be downloaded from the [here](apk).
+
+## Note
+The repository may be committed several times in order update the URL of the model present in ChoiceActivity.java file, since it is hosted on a localhost server whose URL refreshes every two hours.
