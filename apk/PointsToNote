@@ -1,7 +1,0 @@
-Following are some points to note regarding the application:
-
-1. The app will run on all devices running Android Nougat and above (Android 7.0+).
-2. Make sure the Google Search App is updated to the latest version on your device.
-3. If your device supports ARCore, only then will you be able to use the "View in your space feature". Update AR Core to the latest version to get the best experience.
-4. "View in 3D" features works on all models.
-5. Kindly grant the permissions for storage and camera.

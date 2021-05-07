@@ -29,8 +29,5 @@ The app, for now, runs on a cloud-based system i.e one has to be connected to th
 3. <img src="https://cdn.worldvectorlogo.com/logos/google-arcore.svg" width="32" height="32"> AR Core
 4. <img src="https://static.wixstatic.com/media/c42fea_383d3aaedb2e4a6e9574d88e229ce9b7~mv2.jpg/v1/fill/w_120,h_122,al_c,q_80,usm_0.66_1.00_0.01/echoAR%20-%20Icon.webp" width="32" height="32"> Echo AR
 
-## <img src="https://freeiconshop.com/wp-content/uploads/edd/code-flat.png" width="32" height="32"> APKs
-The APK of the project can be downloaded from the [here](apk).
-
 ## Note
 The repository may be committed several times in order update the URL of the model present in ChoiceActivity.java file, since it is hosted on a localhost server whose URL refreshes every two hours.
