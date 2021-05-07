@@ -49,11 +49,11 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
             public void onClick(View v) {
                 Map<String, String> word = arrayList.get(position);
                 context.startActivity(new Intent(context, ModelsActivity.class));
-                arrayList.remove(position);
-                arrayList.add(word);
+                HomeFragment.recentList.remove(position);
+                HomeFragment.recentList.add(word);
                 SharedPreferences sharedPreferences = context.getSharedPreferences("com.teaminversion.envisionbuddy", Context.MODE_PRIVATE);
                 try {
-                    sharedPreferences.edit().putString("recentList", ObjectSerializer.serialize(arrayList)).apply();
+                    sharedPreferences.edit().putString("recentList", ObjectSerializer.serialize(HomeFragment.recentList)).apply();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

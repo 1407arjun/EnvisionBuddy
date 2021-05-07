@@ -17,7 +17,7 @@
         android:layout_marginBottom="16dp"
         android:hint="Enter some text"
         android:overScrollMode="always"
-        android:scrollbarStyle="outsideOverlay"
+        android:scrollbarStyle="insideInset"
         android:scrollbars="vertical"
         app:boxStrokeColor="?attr/iconColor"
         app:endIconDrawable="@drawable/ic_cancel"

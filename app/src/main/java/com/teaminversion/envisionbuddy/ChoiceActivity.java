@@ -44,9 +44,8 @@ public class ChoiceActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String text = intent.getStringExtra("text");
-        boolean status = intent.getBooleanExtra("status", false);
-        choiceList.clear();
-        if (!status) {
+        if (!text.equals("")) {
+            choiceList.clear();
             analyzeText(text);
         }
 
@@ -61,7 +60,6 @@ public class ChoiceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ChoiceActivity.this, MainActivity.class);
-                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
             }
@@ -69,11 +67,11 @@ public class ChoiceActivity extends AppCompatActivity {
     }
 
     private void analyzeText(String inputText){
-        //Sample choices
+
         AnalyzeTextTask analyzeTextTask = new AnalyzeTextTask();
         try {
             String urlEncoder = URLEncoder.encode(inputText, "UTF-8");
-            analyzeTextTask.execute("https://5592c62503e2.ngrok.io/" + urlEncoder);
+            analyzeTextTask.execute("https://de6c984099e4.ngrok.io/" + urlEncoder);
             progress = new ProgressDialog(this);
             progress.setMessage("Retrieving data");
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -90,7 +88,6 @@ public class ChoiceActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent(ChoiceActivity.this, MainActivity.class);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
     }
@@ -122,24 +119,34 @@ public class ChoiceActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.i("JSONArray", s);
-            try {
-                JSONArray jsonArray = new JSONArray(s);
-                for (int i=0; i<jsonArray.length(); i++){
-                    Log.i("infomact", (String) jsonArray.get(i));
-                    choiceList.add((String) jsonArray.get(i));
+            if (s != null) {
+                try {
+                    JSONArray jsonArray = new JSONArray(s);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        choiceList.add((String) jsonArray.get(i));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            progress.dismiss();
-            if (!choiceList.isEmpty()) {
+                progress.dismiss();
+                if (!choiceList.isEmpty()) {
+                    choiceAdapter.notifyDataSetChanged();
+                }else {
+                    Toast.makeText(ChoiceActivity.this, "No relevant words found", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(ChoiceActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+            }else {
+                choiceList.add("outlet");
+                choiceList.add("brain");
+                choiceList.add("plant");
+                choiceList.add("magnet");
+                choiceList.add("earth");
+                choiceList.add("flask");
                 choiceAdapter.notifyDataSetChanged();
-            }else{
-                Toast.makeText(ChoiceActivity.this, "No relevant words found", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(ChoiceActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                progress.dismiss();
+                Toast.makeText(ChoiceActivity.this, "Couldn't connect", Toast.LENGTH_LONG).show();
             }
         }
     }
