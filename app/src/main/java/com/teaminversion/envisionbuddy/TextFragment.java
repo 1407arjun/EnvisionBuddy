@@ -1,5 +1,6 @@
 package com.teaminversion.envisionbuddy;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +24,12 @@ public class TextFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_text, container, false);
 
+        InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (getActivity().getCurrentFocus() != null) {
+            manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            getActivity().getCurrentFocus().clearFocus();
+        }
+
         TextInputLayout inputLayout = root.findViewById(R.id.filledTextField);
         EditText editText = root.findViewById(R.id.editText);
         inputLayout.setError(null);
@@ -37,9 +44,9 @@ public class TextFragment extends Fragment {
                     inputLayout.setError(null);
                     InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     manager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                    editText.clearFocus();
                     Intent intent = new Intent(getActivity(), ChoiceActivity.class);
                     intent.putExtra("text", editText.getText().toString());
-                    intent.putExtra("status", false);
                     startActivity(intent);
                 }
             }

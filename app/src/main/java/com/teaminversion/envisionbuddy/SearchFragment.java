@@ -29,19 +29,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class SearchFragment extends Fragment {
 
     ArrayList<Map<String, String>> searchList = new ArrayList<>();
+    InputMethodManager manager;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        /*dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);*/
+
         View root = inflater.inflate(R.layout.fragment_search, container, false);
-        /*final TextView textView = root.findViewById(R.id.text_dashboard);
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });*/
+
+        manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (getActivity().getCurrentFocus() != null) {
+            manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            getActivity().getCurrentFocus().clearFocus();
+        }
 
         TextInputLayout inputLayout = root.findViewById(R.id.filledTextField);
         EditText searchText = root.findViewById(R.id.editText);
@@ -84,6 +83,7 @@ public class SearchFragment extends Fragment {
                         }
                         InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         manager.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
+                        searchText.clearFocus();
                     }
 
                     @Override
