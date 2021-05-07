@@ -29,8 +29,7 @@ public class ModelsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ModelsActivity.this, ChoiceActivity.class);
-                intent.putExtra("status", true);
-                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("text", "");
                 startActivity(intent);
                 finish();
             }
@@ -41,8 +40,7 @@ public class ModelsActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent(ModelsActivity.this, ChoiceActivity.class);
-        intent.putExtra("status", true);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra("text", "");
         startActivity(intent);
         finish();
     }
