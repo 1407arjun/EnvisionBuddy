@@ -31,3 +31,5 @@ The app, for now, runs on a cloud-based system i.e one has to be connected to th
 
 ## Note
 The repository may be committed several times in order update the URL of the model present in ChoiceActivity.java file, since it is hosted on a localhost server whose URL refreshes every two hours.
+
+App Icon Credits: https://cdn4.iconfinder.com/data/icons/smart-technology-indigo-vol-1/256/AR_Technology-512.png
