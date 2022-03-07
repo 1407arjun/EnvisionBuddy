@@ -30,6 +30,6 @@ The app, for now, runs on a cloud-based system i.e one has to be connected to th
 4. <img src="https://static.wixstatic.com/media/c42fea_383d3aaedb2e4a6e9574d88e229ce9b7~mv2.jpg/v1/fill/w_120,h_122,al_c,q_80,usm_0.66_1.00_0.01/echoAR%20-%20Icon.webp" width="32" height="32"> Echo AR
 
 ## Note
-The repository may be committed several times in order update the URL of the model present in ChoiceActivity.java file, since it is hosted on a localhost server whose URL refreshes every two hours.
+The repository may be committed several times in order update the URL of the model present in ChoiceActivity.java file, since it is hosted on a localhost server whose URL refreshes every two hours. This approach will soon be replaced by either a cloud-based or a local ML model implementation using TensorFlow Lite models.
 
 App Icon Credits: https://cdn4.iconfinder.com/data/icons/smart-technology-indigo-vol-1/256/AR_Technology-512.png
